@@ -1,0 +1,32 @@
+# --- Compilation & Build (WSL/Linux side) ---
+# Ignore the entire build directory where CMake works
+build/
+bin/
+obj/
+out/
+# Ignore the hidden CMake folder VS Code creates
+.cmake/
+
+# --- Executables ---
+# Ignore the compiled output
+wordcounter
+*.out
+*.app
+*.exe
+
+# --- VS Code & Windows Metadata ---
+.vscode/
+# Keep settings if you want to share them with teammates
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Windows thumbnails and OS junk
+Thumbs.db
+.DS_Store
+
+# --- Project Specifics ---
+# Large text files for MapReduce shouldn't be in Git
+resources/*.txt
+# Except maybe a small sample file
+!resources/sample.txt
