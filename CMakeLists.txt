@@ -7,4 +7,4 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(include)
 
 # Just build the example (it will pull in the header logic)
-add_executable(wordcounter examples/WordCount.cpp)
+add_executable(wordcounter src/WordCount.cpp)

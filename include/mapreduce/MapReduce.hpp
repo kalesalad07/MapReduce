@@ -1,55 +1,30 @@
 #pragma once
+#include "Emitter.hpp"
 #include <string>
 #include <vector>
-#include <map>
-#include <fstream>
-#include <iostream>
 
+template <typename K, typename V>
 class MapReduce {
-    private:
-        std::map<std::string, std::vector<std::string>> intermediate;
-        std::map<std::string, std::string> result;
+private:
+    Emitter<K,V>* emitter = nullptr;
+public:
+    virtual ~MapReduce() = default;
 
-        std::string filePath;
+    void setEmitter(Emitter<K,V>* emitter){
+        this->emitter = emitter;
+    }
 
-
-
-    public:
-        virtual ~MapReduce() = default;
-
-        MapReduce(std::string filePath){
-            this->filePath = filePath;
+    void emitIntermediate(K key, V value){
+        if(emitter){
+            emitter->emitIntermediate(key, value);
         }
-
-        virtual void map(std::string key, std::string value) = 0;
-
-        virtual void reduce(std::string key, std::vector<std::string> values) = 0;
-
-        void emitIntermediate(std::string key, std::string value){
-            intermediate[key].push_back(value);
+    }
+    void emit(K key, V value){
+        if(emitter){
+            emitter->emit(key, value);
         }
+    }
 
-        void emit(std::string key, std::string value){
-            result[key] = value;
-        }
-
-        void execute(){
-            std::ifstream file(filePath);
-            std::string line;
-            while(std::getline(file, line)){
-                map(line, line);
-            }
-            file.close();
-
-            for(auto it : intermediate){
-                reduce(it.first, it.second);
-            }
-
-        }
-
-        void showResult(){
-            for(auto it : result){
-                std::cout << it.first << ": " << it.second << std::endl;
-            }
-        }
+    virtual void map(std::string key, std::string value) = 0;
+    virtual void reduce(K key, std::vector<V> values) = 0;
 };
