@@ -1,6 +1,5 @@
 #include "mapreduce/MapReduce.hpp"
 #include "mapreduce/SequentialExecutor.hpp"
-#include "mapreduce/Emitter.hpp"
 #include <string>
 
 class WordCounter: public MapReduce<std::string, int> {
@@ -28,6 +27,6 @@ class WordCounter: public MapReduce<std::string, int> {
 int main(){
     WordCounter wc;
     SequentialExecutor<std::string, int> executor(wc);
-    executor.execute("../resources/pg-being_ernest.txt");
+    executor.execute("../resources/word_count");
     executor.showResult();
 }

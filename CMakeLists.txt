@@ -8,3 +8,4 @@ include_directories(include)
 
 # Just build the example (it will pull in the header logic)
 add_executable(wordcounter src/WordCount.cpp)
+add_executable(invertedindex src/InvertedIndex.cpp)

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <filesystem>
+
 
 template <typename K, typename V>
 class SequentialEmitter : public Emitter<K,V> {
@@ -31,18 +33,35 @@ public:
         mr.setEmitter(&emitter);
     }
 
-    void execute(const std::string& filePath){        
-        std::ifstream file(filePath);
-        if(!file.is_open()){
-            std::cerr << "Error opening file: " << filePath << std::endl;
-            return;
-        }
+    std::vector<std::string> getFilePaths(const std::string& filePath){
+        std::vector<std::string> paths;
 
-        //Map Phase
-        std::string line;
-        while(std::getline(file,line)){
-            mr->map(filePath, line);
+        if(std::filesystem::exists(filePath) && std::filesystem::is_directory(filePath)){
+            for(const auto& entry: std::filesystem::directory_iterator(filePath)){
+                if(entry.is_regular_file()){
+                    paths.push_back(entry.path().string());
+                }
+            }
         }
+        return paths;
+    }
+
+    void execute(const std::string& filePath){
+        auto files = getFilePaths(filePath);
+        
+        for(auto fileName: files){
+            std::ifstream file(fileName);
+            if(!file.is_open()){
+                std::cerr << "Error opening file: " << fileName << std::endl;
+                return;
+            }
+            //Map Phase
+            std::string line;
+            while(std::getline(file,line)){
+                mr->map(fileName, line);
+            }
+        }
+        
 
         //Reduce Phase
         for(auto const& it: emitter.intermediate){

@@ -27,6 +27,4 @@ Thumbs.db
 
 # --- Project Specifics ---
 # Large text files for MapReduce shouldn't be in Git
-resources/*.txt
-# Except maybe a small sample file
-!resources/sample.txt
+resources
